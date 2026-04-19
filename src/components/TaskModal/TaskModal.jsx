@@ -4,6 +4,7 @@ import './TaskModal.css';
 
 const EMPTY_FORM = {
   title: '',
+  details: '',
   status: 'todo',
   priority: 'medium',
   due: '',
@@ -60,6 +61,18 @@ function TaskModal({ isOpen, defaultStatus = 'todo', onClose, onSubmit }) {
               value={form.title}
               onChange={handleChange}
               autoFocus
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="details">Details</label>
+            <textarea
+              id="details"
+              name="details"
+              placeholder="Add extra context for this task"
+              value={form.details}
+              onChange={handleChange}
+              rows="4"
             />
           </div>
 

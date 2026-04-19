@@ -6,7 +6,7 @@ const PRIORITY_CONFIG = {
   low:    { label: 'Low',    className: 'priority--low' },
 };
 
-function TaskCard({ id, title, priority, due, tags = [] }) {
+function TaskCard({ id, title, details, priority, due, tags = [] }) {
   const p = PRIORITY_CONFIG[priority];
 
   function handleDragStart(e) {
@@ -28,6 +28,7 @@ function TaskCard({ id, title, priority, due, tags = [] }) {
         </div>
       )}
       <p className="task-card-title">{title}</p>
+      {details ? <p className="task-card-details">{details}</p> : null}
       <div className="task-card-footer">
         <span className={`task-card-priority ${p.className}`}>{p.label}</span>
         <span className="task-card-due">{due}</span>
