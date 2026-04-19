@@ -6,10 +6,20 @@ const PRIORITY_CONFIG = {
   low:    { label: 'Low',    className: 'priority--low' },
 };
 
-function TaskCard({ title, priority, due, tags = [] }) {
+function TaskCard({ id, title, priority, due, tags = [] }) {
   const p = PRIORITY_CONFIG[priority];
+
+  function handleDragStart(e) {
+    e.dataTransfer.setData('taskId', id);
+    e.dataTransfer.effectAllowed = 'move';
+  }
+
   return (
-    <div className="task-card">
+    <div
+      className="task-card"
+      draggable
+      onDragStart={handleDragStart}
+    >
       {tags.length > 0 && (
         <div className="task-card-tags">
           {tags.map((tag) => (

@@ -71,4 +71,13 @@
   flex-direction: column;
   gap: 10px;
   flex: 1;
+  border-radius: 8px;
+  min-height: 110px;
+  transition: background-color 0.15s, outline 0.15s;
+}
+
+.kanban-column-body--drag-over {
+  background-color: #ede9fe;
+  outline: 2px dashed #6366f1;
+  outline-offset: 2px;
 }

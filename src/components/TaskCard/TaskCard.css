@@ -13,6 +13,14 @@
   transform: translateY(-2px);
 }
 
+.task-card:active {
+  cursor: grabbing;
+}
+
+.task-card[draggable='true']:active {
+  opacity: 0.5;
+}
+
 .task-card-tags {
   display: flex;
   flex-wrap: wrap;

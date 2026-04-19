@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
+import {useKanban} from '../../context/KanbanContext';
 import './TaskModal.css';
 
 const EMPTY_FORM = {
@@ -11,6 +12,8 @@ const EMPTY_FORM = {
 
 function TaskModal({ isOpen, defaultStatus = 'todo', onClose, onSubmit }) {
   const [form, setForm] = useState({ ...EMPTY_FORM, status: defaultStatus });
+
+  const { columns } = useKanban()
 
   useEffect(() => {
     if (isOpen) setForm({ ...EMPTY_FORM, status: defaultStatus });
@@ -64,10 +67,9 @@ function TaskModal({ isOpen, defaultStatus = 'todo', onClose, onSubmit }) {
             <div className="form-group">
               <label htmlFor="status">Column</label>
               <select id="status" name="status" value={form.status} onChange={handleChange}>
-                <option value="todo">To Do</option>
-                <option value="in-progress">In Progress</option>
-                <option value="review">In Review</option>
-                <option value="completed">Done</option>
+                {columns.map((col) => (
+                    <option key={col.id} value={col.id}>{col.title}</option>
+                ))}
               </select>
             </div>
 
