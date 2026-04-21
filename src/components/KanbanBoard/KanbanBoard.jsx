@@ -1,10 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import { useKanban } from '../../context/KanbanContext';
+import { useTaskDialog } from '../../context/TaskDialogContext';
 import KanbanColumn from '../KanbanColumn/KanbanColumn';
 import './KanbanBoard.css';
 
-function KanbanBoard({ onAddTask }) {
+function KanbanBoard() {
   const { tasks, columns, addColumn } = useKanban();
+  const { openTaskDialog } = useTaskDialog();
   const [isAdding, setIsAdding] = useState(false);
   const [newTitle, setNewTitle] = useState('');
   const inputRef = useRef(null);
@@ -41,7 +43,7 @@ function KanbanBoard({ onAddTask }) {
           accentColor={col.accentColor}
           tasks={tasksByStatus[col.id]}
           count={tasksByStatus[col.id].length}
-          onAddTask={() => onAddTask(col.id)}
+          onAddTask={() => openTaskDialog(col.id)}
         />
       ))}
 

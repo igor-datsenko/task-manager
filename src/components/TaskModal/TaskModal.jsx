@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react';
 import {useKanban} from '../../context/KanbanContext';
+import { useTaskDialog } from '../../context/TaskDialogContext';
 import './TaskModal.css';
 
 const EMPTY_FORM = {
@@ -11,22 +12,24 @@ const EMPTY_FORM = {
   tags: '',
 };
 
-function TaskModal({ isOpen, defaultStatus = 'todo', onClose, onSubmit }) {
-  const [form, setForm] = useState({ ...EMPTY_FORM, status: defaultStatus });
-
-  const { columns } = useKanban()
-
-  useEffect(() => {
-    if (isOpen) setForm({ ...EMPTY_FORM, status: defaultStatus });
-  }, [isOpen, defaultStatus]);
+function TaskModal({ onSubmit }) {
+  const { isTaskDialogOpen, taskDialogDefaultStatus, closeTaskDialog } = useTaskDialog();
+  const [form, setForm] = useState({ ...EMPTY_FORM, status: taskDialogDefaultStatus });
+  const { columns, addTask } = useKanban();
 
   useEffect(() => {
-    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
-    if (isOpen) document.addEventListener('keydown', onKey);
+    if (isTaskDialogOpen) {
+      setForm({ ...EMPTY_FORM, status: taskDialogDefaultStatus });
+    }
+  }, [isTaskDialogOpen, taskDialogDefaultStatus]);
+
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') closeTaskDialog(); };
+    if (isTaskDialogOpen) document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
-  }, [isOpen, onClose]);
+  }, [isTaskDialogOpen, closeTaskDialog]);
 
-  if (!isOpen) return null;
+  if (!isTaskDialogOpen) return null;
 
   function handleChange(e) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -35,19 +38,19 @@ function TaskModal({ isOpen, defaultStatus = 'todo', onClose, onSubmit }) {
   function handleSubmit(e) {
     e.preventDefault();
     if (!form.title.trim()) return;
-    onSubmit({
+    addTask({
       ...form,
       tags: form.tags ? form.tags.split(',').map((t) => t.trim()).filter(Boolean) : [],
-    });
-    onClose();
+    })
+    closeTaskDialog();
   }
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div className="modal-overlay" onClick={closeTaskDialog}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h2 className="modal-title">Add Task</h2>
-          <button className="modal-close" onClick={onClose} aria-label="Close">&times;</button>
+          <button className="modal-close" onClick={closeTaskDialog} aria-label="Close">&times;</button>
         </div>
 
         <form className="modal-form" onSubmit={handleSubmit}>
@@ -120,7 +123,7 @@ function TaskModal({ isOpen, defaultStatus = 'todo', onClose, onSubmit }) {
           </div>
 
           <div className="modal-footer">
-            <button type="button" className="btn-cancel" onClick={onClose}>Cancel</button>
+            <button type="button" className="btn-cancel" onClick={closeTaskDialog}>Cancel</button>
             <button type="submit" className="btn-submit">Add Task</button>
           </div>
         </form>
