@@ -49,6 +49,16 @@ export function KanbanProvider({ children }) {
     setTasks((prev) => [...prev, { ...taskData, id: Date.now() }]);
   }
 
+  function updateTask(taskId, updates) {
+    setTasks((prev) =>
+      prev.map((t) => (t.id === taskId ? { ...t, ...updates } : t))
+    );
+  }
+
+  function removeTask(taskId) {
+    setTasks((prev) => prev.filter((t) => t.id !== taskId));
+  }
+
   function moveTask(taskId, newStatus) {
     setTasks((prev) =>
       prev.map((t) => (t.id === taskId ? { ...t, status: newStatus } : t))
@@ -74,7 +84,7 @@ export function KanbanProvider({ children }) {
   }, [tasks, columns]);
 
   return (
-    <KanbanContext.Provider value={{ tasks, columns, addTask, moveTask, addColumn, removeColumn }}>
+    <KanbanContext.Provider value={{ tasks, columns, addTask, moveTask, addColumn, removeColumn, updateTask, removeTask }}>
       {children}
     </KanbanContext.Provider>
   );

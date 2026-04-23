@@ -13,15 +13,24 @@ const EMPTY_FORM = {
 };
 
 function TaskModal({ onSubmit }) {
-  const { isTaskDialogOpen, taskDialogDefaultStatus, closeTaskDialog } = useTaskDialog();
-  const [form, setForm] = useState({ ...EMPTY_FORM, status: taskDialogDefaultStatus });
-  const { columns, addTask } = useKanban();
+  const { isTaskDialogOpen, closeTaskDialog, task, isEditing } = useTaskDialog();
+
+  const [form, setForm] = useState({ ...EMPTY_FORM});
+  const { columns, addTask, updateTask, removeTask } = useKanban();
 
   useEffect(() => {
     if (isTaskDialogOpen) {
-      setForm({ ...EMPTY_FORM, status: taskDialogDefaultStatus });
+      let data = {
+        ...EMPTY_FORM,
+        ...task,
+        ...(task?.tags ? {tags: task?.tags?.join(', ')}: '')
+      }
+
+      setForm(data);
+      console.log(form);
     }
-  }, [isTaskDialogOpen, taskDialogDefaultStatus]);
+
+  },  [isTaskDialogOpen]);
 
   useEffect(() => {
     const onKey = (e) => { if (e.key === 'Escape') closeTaskDialog(); };
@@ -38,10 +47,20 @@ function TaskModal({ onSubmit }) {
   function handleSubmit(e) {
     e.preventDefault();
     if (!form.title.trim()) return;
-    addTask({
+    console.log(form);
+    const newTask = {
       ...form,
-      tags: form.tags ? form.tags.split(',').map((t) => t.trim()).filter(Boolean) : [],
-    })
+      tags: form?.tags ? form?.tags?.split(',').map((t) => t.trim()).filter(Boolean) : [],
+    }
+
+    console.log(newTask);
+
+    if (isEditing) {
+      updateTask(task.id, newTask);
+    } else {
+      addTask(newTask)
+    }
+
     closeTaskDialog();
   }
 
@@ -124,7 +143,15 @@ function TaskModal({ onSubmit }) {
 
           <div className="modal-footer">
             <button type="button" className="btn-cancel" onClick={closeTaskDialog}>Cancel</button>
-            <button type="submit" className="btn-submit">Add Task</button>
+            {
+              isEditing &&
+                <button type="button"
+                        className="btn-delete"
+                        onClick={() => {removeTask(task.id); closeTaskDialog();}}>
+                  Delete
+                </button>
+            }
+            <button type="submit" className="btn-submit">{isEditing ? 'Save Task' : 'Add Task'}</button>
           </div>
         </form>
       </div>

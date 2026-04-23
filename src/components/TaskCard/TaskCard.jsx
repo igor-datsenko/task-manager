@@ -1,4 +1,5 @@
 import './TaskCard.css';
+import {useTaskDialog} from "../../context/TaskDialogContext";
 
 const PRIORITY_CONFIG = {
   high:   { label: 'High',   className: 'priority--high' },
@@ -8,6 +9,8 @@ const PRIORITY_CONFIG = {
 
 function TaskCard({ id, title, details, priority, due, tags = [] }) {
   const p = PRIORITY_CONFIG[priority];
+
+  const { openTaskDialog } = useTaskDialog();
 
   function handleDragStart(e) {
     e.dataTransfer.setData('taskId', id);
@@ -19,6 +22,12 @@ function TaskCard({ id, title, details, priority, due, tags = [] }) {
       className="task-card"
       draggable
       onDragStart={handleDragStart}
+      onClick={() => openTaskDialog({id, title, details, priority, due, tags}, true)}
+      style={{
+        backgroundColor: p.className === 'priority--high' ? '#fef2f2' : p.className === 'priority--medium' ? '#fffbeb' : '#f3f9ff',
+      }}
+      title={details ? `${title}\n${details}` : title}
+      onDoubleClick={() => openTaskDialog({id, title, details, priority, due, tags}, true)}
     >
       {tags.length > 0 && (
         <div className="task-card-tags">

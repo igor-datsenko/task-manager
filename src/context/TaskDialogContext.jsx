@@ -11,16 +11,10 @@ export const TaskDialogContext = createContext(null);
 export function TaskDialogProvider({ children }) {
   const [dialog, setDialog] = useState(DEFAULT_DIALOG_STATE);
 
-  // function openTaskDialog(defaultStatus = 'todo') {
-  //   setDialog({
-  //     isOpen: true,
-  //     defaultStatus,
-  //   });
-  // }
-
-  function openTaskDialog(task) {
+  function openTaskDialog(task, isEditing = false) {
     setDialog({
       isOpen: true,
+      isEditing,
       task,
     });
   }
@@ -29,6 +23,7 @@ export function TaskDialogProvider({ children }) {
     setDialog((prev) => ({
       ...prev,
       isOpen: false,
+      isEditing: false,
       task: null,
     }));
   }
@@ -38,6 +33,7 @@ export function TaskDialogProvider({ children }) {
       value={{
         isTaskDialogOpen: dialog.isOpen,
         task: dialog.task,
+        isEditing: dialog.isEditing,
         openTaskDialog,
         closeTaskDialog,
       }}

@@ -43,7 +43,7 @@ function KanbanBoard() {
           accentColor={col.accentColor}
           tasks={tasksByStatus[col.id]}
           count={tasksByStatus[col.id].length}
-          onAddTask={() => openTaskDialog(col.id)}
+          onAddTask={() => openTaskDialog({status: col.id})}
         />
       ))}
 
