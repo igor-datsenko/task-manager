@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(mv /c/Users/Igord/projects/task-manager/src/logo.svg /c/Users/Igord/projects/task-manager/src/assets/)",
-      "Bash(mv /c/Users/Igord/projects/task-manager/src/App.css /c/Users/Igord/projects/task-manager/src/styles/)",
-      "Bash(mv /c/Users/Igord/projects/task-manager/src/index.css /c/Users/Igord/projects/task-manager/src/styles/)"
-    ]
-  }
-}
